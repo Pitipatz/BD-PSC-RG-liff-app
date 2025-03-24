@@ -14,34 +14,25 @@
 
     <script>
         async function main() {
-            try {
-                await liff.init({ liffId: "2007110168-xr57BEX8" }); // ใช้ LIFF ID ที่ได้จาก LINE Developers
-                console.log("LIFF Initialized");
+            await liff.init({ liffId: "2007110168-xr57BEX8" }); // ใช้ LIFF ID ที่ได้จาก LINE Developers
+            console.log("LIFF Initialized");
 
-                if (!liff.isLoggedIn()) {
-                    console.log("User is not logged in, redirecting to login...");
-                    liff.login(); // ถ้าผู้ใช้ยังไม่ได้ล็อกอินจะทำการล็อกอิน
-                } else {
-                    console.log("User is logged in");
-                }
-            } catch (error) {
-                console.error("Error during LIFF initialization:", error);
-                alert("เกิดข้อผิดพลาดในการเริ่มต้น LIFF: " + error.message);
+            if (liff.isLoggedIn()) {
+                console.log("User is logged in");
+            } else {
+                console.log("User is not logged in, redirecting to login...");
+                liff.login();
             }
         }
 
         // ฟังก์ชันดึงข้อมูลโปรไฟล์ผู้ใช้
         async function getProfile() {
             try {
-                console.log("Trying to get profile...");
                 const profile = await liff.getProfile();
-                console.log("Profile received:", profile);
                 document.getElementById("userInfo").innerText = `Hello, ${profile.displayName}`;
                 document.getElementById("profilePic").src = profile.pictureUrl; // แสดงรูปโปรไฟล์
             } catch (error) {
                 console.error("Error getting profile:", error);
-                document.getElementById("userInfo").innerText = "ไม่สามารถดึงข้อมูลผู้ใช้ได้";
-                alert("ไม่สามารถดึงข้อมูลโปรไฟล์ได้: " + error.message);
             }
         }
 
