@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFF App</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.22.2/sdk.js"></script>
+</head>
+<body>
+    <h1>LIFF Example</h1>
+    <button onclick="getProfile()">ดึงข้อมูลผู้ใช้</button>
+    <p id="userInfo"></p>
+
+    <script>
+        async function main() {
+            await liff.init({ liffId: "2007110168-xr57BEX8" }); // ใช้ LIFF ID ที่ได้จาก LINE Developers
+            console.log("LIFF Initialized");
+
+            if (liff.isLoggedIn()) {
+                console.log("User is logged in");
+            } else {
+                console.log("User is not logged in, redirecting to login...");
+                liff.login();
+            }
+        }
+
+        async function getProfile() {
+            const profile = await liff.getProfile();
+            document.getElementById("userInfo").innerText = `Hello, ${profile.displayName}`;
+        }
+
+        main();
+    </script>
+</body>
+</html>
