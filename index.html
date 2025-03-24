@@ -10,6 +10,7 @@
     <h1>LIFF Example</h1>
     <button onclick="getProfile()">ดึงข้อมูลผู้ใช้</button>
     <p id="userInfo"></p>
+    <img id="profilePic" src="" alt="Profile Picture" />
 
     <script>
         async function main() {
@@ -24,12 +25,22 @@
             }
         }
 
+        // ฟังก์ชันดึงข้อมูลโปรไฟล์ผู้ใช้
         async function getProfile() {
-            const profile = await liff.getProfile();
-            document.getElementById("userInfo").innerText = `Hello, ${profile.displayName}`;
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById("userInfo").innerText = `Hello, ${profile.displayName}`;
+                document.getElementById("profilePic").src = profile.pictureUrl; // แสดงรูปโปรไฟล์
+            } catch (error) {
+                console.error("Error getting profile:", error);
+            }
         }
 
-        main();
+        // เรียกฟังก์ชัน main เมื่อโหลดหน้า
+        window.onload = function() {
+            main();
+        }
     </script>
+
 </body>
 </html>
