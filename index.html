@@ -1,46 +1,240 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIFF App</title>
-    <script src="https://static.line-scdn.net/liff/edge/2.22.2/sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลงทะเบียน</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function isValidThaiID(id) {
+      if (id.length !== 13 || isNaN(id)) {
+        return false;
+      }
+
+      let sum = 0;
+      for (let i = 0; i < 12; i++) {
+        sum += parseInt(id.charAt(i)) * (13 - i);
+      }
+
+      let remainder = sum % 11;
+      let checkDigit = 11 - remainder;
+      if (checkDigit === 10) checkDigit = 0;
+      if (checkDigit === 11) checkDigit = 1;
+
+      return parseInt(id.charAt(12)) === checkDigit;
+    }
+
+    $(document).ready(function() {
+      var isIDVerified = false; 
+
+      $("#verifyID").click(function() {
+        var idNumber = $("#idNumber").val();
+
+        if (isValidThaiID(idNumber)) {
+          $("#idNumber").css("background-color", "#d4edda");
+          $("#idMessage").text("✅ เลขบัตรประชาชนถูกต้อง").css("color", "green");
+          isIDVerified = true;
+        } else {
+          $("#idNumber").css("background-color", "#f8d7da");
+          $("#idMessage").text("❌ เลขบัตรประชาชนไม่ถูกต้อง").css("color", "red");
+          isIDVerified = false;
+        }
+      });
+
+      $("#registrationForm").submit(function(event) {
+        event.preventDefault(); 
+
+        if (!isIDVerified) {
+          alert("กรุณากดปุ่ม Verify เพื่อตรวจสอบเลขบัตรประชาชนก่อนบันทึกข้อมูล");
+          return;
+        }
+
+        alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว!");
+        $("#registrationForm")[0].reset();
+        $("#idNumber").css("background-color", ""); 
+        $("#idMessage").text(""); 
+        isIDVerified = false; 
+      });
+    });
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      flex-direction: column;
+    }
+
+    .container {
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      width: 150px;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+            box-sizing: border-box; /* ป้องกันการล้นขอบ */
+          max-width: 100%;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      background-color: #FFFFFF;
+      color: brown;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 5px;
+            box-sizing: border-box; /* ป้องกันการล้นขอบ */
+          max-width: 100%;
+    }
+
+    .verify-button {
+      width: 100%;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-sizing: border-box; /* ป้องกันการล้นขอบ */
+      max-width: 100%;
+    }
+
+    .verify-button:hover {
+      background-color: #0056b3;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 5px;
+      box-sizing: border-box; /* ป้องกันการล้นขอบ */
+      max-width: 100%;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
-    <h1>ลงทะเบียน</h1>
-    <button onclick="getProfile()">ยืนยันลงทะเบียน</button>
-    <p id="userInfo"></p>
-    <img id="profilePic" src="" alt="Profile Picture" />
 
-    <script>
-        async function main() {
-            await liff.init({ liffId: "2007110168-ZWgRXyVl" }); // ใช้ LIFF ID ที่ได้จาก LINE Developers
-            console.log("LIFF Initialized");
+  <div class="container">
+    <!-- โลโก้ -->
+    <img src="https://www.paisancapital.com/frontend/img/logo/logo.png" alt="Company Logo" class="logo">
 
-            if (liff.isLoggedIn()) {
-                console.log("User is logged in");
-            } else {
-                console.log("User is not logged in, redirecting to login...");
-                liff.login();
-            }
-        }
+    <h2>ฟอร์มลงทะเบียน</h2>
+    <form id="registrationForm">
+      <label for="userID">User ID:</label><br>
+      <input type="text" id="userID" name="userID" required><br><br>
 
-        // ฟังก์ชันดึงข้อมูลโปรไฟล์ผู้ใช้
-        async function getProfile() {
-            try {
-                const profile = await liff.getProfile();
-                document.getElementById("userInfo").innerText = `Hello, ${profile.displayName}`;
-                document.getElementById("profilePic").src = profile.pictureUrl; // แสดงรูปโปรไฟล์
-            } catch (error) {
-                console.error("Error getting profile:", error);
-            }
-        }
+      <label for="userName">User Name:</label><br>
+      <input type="text" id="userName" name="userName" required><br><br>
 
-        // เรียกฟังก์ชัน main เมื่อโหลดหน้า
-        window.onload = function() {
-            main();
-        }
-    </script>
+      <label for="fullName">ชื่อ-สกุล:</label><br>
+      <input type="text" id="fullName" name="fullName" required><br><br>
+
+      <label for="idNumber">เลขบัตรประชาชน:</label><br>
+      <input type="text" id="idNumber" name="idNumber" required>
+      <button type="button" id="verifyID" class="verify-button">Verify</button>
+      <span id="idMessage"></span>
+      <br><br>
+
+      <label for="carRegistration">ทะเบียนรถ:</label><br>
+      <input type="text" id="carRegistration" name="carRegistration" required><br><br>
+
+      <label for="phoneNumber">เบอร์โทรศัพท์:</label><br>
+      <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{10}" required><br><br>
+
+      <label for="Email">Email address:</label><br>
+      <input type="email" id="Email" name="Emailaddress" required><br><br>
+
+      <label for="mktName">ชื่อเจ้าหน้าที่การตลาด:</label><br>
+      <select id="mktName" name="mktName" required>
+        <option value="">-- เลือกเจ้าหน้าที่ --</option>
+        <option value="ปภาวิน นิคมทัศน์">ปภาวิน นิคมทัศน์</option>
+        <option value="ปฐมชาต แสงทอง">ปฐมชาต แสงทอง</option>
+        <option value="ณทิตา ธีรสุตภากุล">ณทิตา ธีรสุตภากุล</option>
+        <option value="จุฑารัตน์ พากิโต">จุฑารัตน์ พากิโต</option>
+        <option value="ชัยวัฒน์ อุดมทอง">ชัยวัฒน์ อุดมทอง</option>
+        <option value="ศักดา  ทองม่วง">ศักดา ทองม่วง</option>
+        <option value="อนุพงษ์  สิงห์เรือง">อนุพงษ์  สิงห์เรือง</option>
+        <option value="สมประสงค์ พิชิ">สมประสงค์ พิชิ</option>
+        <option value="ภัทรพงศ์ ตันติวงศ์">ภัทรพงศ์ ตันติวงศ์</option>
+        <option value="นัทภรณ์ ธรรมโชติ">นัทภรณ์ ธรรมโชติ</option>
+        <option value="วิทยายุทธ ธนูทอง">วิทยายุทธ ธนูทอง</option>
+        <option value="เนรมิต นะมา">เนรมิต นะมา</option>
+        <option value="พัชรพงษ์ ตนภู">พัชรพงษ์ ตนภู</option>
+      </select><br><br>
+
+      <input type="hidden" id="registerDate" name="registerDate">
+
+      <button type="submit">บันทึกข้อมูล</button>
+    </form>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // Set the current date/time when the page loads
+      var currentDate = new Date();
+      var formattedDate = currentDate.toISOString();
+      $("#registerDate").val(formattedDate);
+
+      $("#registrationForm").submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get form data
+        var formData = {
+          userID: $("#userID").val(),
+          userName: $("#userName").val(),
+          fullName: $("#fullName").val(),
+          idNumber: $("#idNumber").val(),
+          carRegistration: $("#carRegistration").val(),
+          phoneNumber: $("#phoneNumber").val(),
+          Emailaddress: $("#Email").val(),
+          mktName: $("#mktName").val(),
+          registerDate: $("#registerDate").val()
+        };
+
+        // Call the Google Sheets API endpoint to store the data
+        $.ajax({
+          url: "https://script.google.com/macros/s/AKfycbzEIhBEQKhmkYVUUR1aJpm3jvtccgIsgJYsk-immMpil647mSGD0AHnu90U4-BeMEhP/exec",
+          method: "POST",
+          data: formData,
+          success: function(response) {
+            alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว!");
+            $("#registrationForm")[0].reset(); // Reset the form
+          },
+          error: function(error) {
+            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!");
+            console.error(error);
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
