@@ -197,43 +197,37 @@
 
   <script>
     $(document).ready(function() {
-      // Set the current date/time when the page loads
-      var currentDate = new Date();
-      var formattedDate = currentDate.toISOString();
-      $("#registerDate").val(formattedDate);
+  $("#registrationForm").submit(function(event) {
+    event.preventDefault(); // ป้องกันการ submit ปกติ
 
-      $("#registrationForm").submit(function(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+    var formData = {
+      userID: $("#userID").val(),
+      userName: $("#userName").val(),
+      fullName: $("#fullName").val(),
+      idNumber: $("#idNumber").val(),
+      carRegistration: $("#carRegistration").val(),
+      phoneNumber: $("#phoneNumber").val(),
+      mktName: $("#mktName").val(),
+      registerDate: $("#registerDate").val()
+    };
 
-        // Get form data
-        var formData = {
-          userID: $("#userID").val(),
-          userName: $("#userName").val(),
-          fullName: $("#fullName").val(),
-          idNumber: $("#idNumber").val(),
-          carRegistration: $("#carRegistration").val(),
-          phoneNumber: $("#phoneNumber").val(),
-          Emailaddress: $("#Email").val(),
-          mktName: $("#mktName").val(),
-          registerDate: $("#registerDate").val()
-        };
-
-        // Call the Google Sheets API endpoint to store the data
-        $.ajax({
-          url: "https://script.google.com/macros/s/AKfycbzEIhBEQKhmkYVUUR1aJpm3jvtccgIsgJYsk-immMpil647mSGD0AHnu90U4-BeMEhP/exec",
-          method: "POST",
-          data: formData,
-          success: function(response) {
-            alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว!");
-            $("#registrationForm")[0].reset(); // Reset the form
-          },
-          error: function(error) {
-            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!");
-            console.error(error);
-          }
-        });
-      });
+    $.ajax({
+      url: "https://script.google.com/macros/s/AKfycbzEIhBEQKhmkYVUUR1aJpm3jvtccgIsgJYsk-immMpil647mSGD0AHnu90U4-BeMEhP/exec",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(formData),
+      success: function(response) {
+        alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว!");
+        $("#registrationForm")[0].reset();
+      },
+      error: function(xhr, status, error) {
+        console.error("Error:", error);
+        alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!");
+      }
     });
+  });
+});
+
   </script>
 
 </body>
