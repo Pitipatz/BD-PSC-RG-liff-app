@@ -210,20 +210,28 @@
       mktName: $("#mktName").val(),
       registerDate: $("#registerDate").val()
     };
-
-fetch("https://script.google.com/macros/s/AKfycbzH-s2yze0NB4xEfYQatIwBK1smbIlAUtCdu8d9g1tDAHYQ9gCeKpIVaWykVX1dthv7/exec", {
+fetch("https://script.google.com/macros/s/AKfycbw6s0rDRbD8ipRoAyTK9457_41N8Cx9mZc693jXv02uXoC5YGu16wuHzpopIEFrLhxa/exec", {
   method: "POST",
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/x-www-form-urlencoded"
   },
-  body: JSON.stringify(formData)
+  body: new URLSearchParams({
+    userID: "U12345",
+    userName: "john_doe",
+    fullName: "John Doe",
+    idNumber: "1234567890123",
+    carRegistration: "AB1234",
+    phoneNumber: "0812345678",
+    mktName: "Marketing Team A",
+    registerDate: "2025-03-28"
+  })
 })
 .then(response => response.json())
 .then(data => {
-  console.log("Success:", data);
+  console.log("✅ Success:", data);
 })
 .catch(error => {
-  console.error("Error:", error);
+  console.error("❌ Error:", error);
 });
       });
     });
