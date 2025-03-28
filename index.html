@@ -211,22 +211,21 @@
       registerDate: $("#registerDate").val()
     };
 
-    $.ajax({
-      url: "https://script.google.com/macros/s/AKfycbyFPcVabr9-FSKfdLbezvK9ONnQZQwWRY-sDmokJo-AzEnDk0qsM7-InzJ94CYRmeSU/exec",
-      method: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(formData),
-      success: function(response) {
-        alert("ข้อมูลถูกบันทึกเรียบร้อยแล้ว!");
-        $("#registrationForm")[0].reset();
-      },
-      error: function(xhr, status, error) {
-        console.error("Error:", error);
-        alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล!");
-      }
-    });
-  });
+fetch("https://script.google.com/macros/s/AKfycbyFPcVabr9-FSKfdLbezvK9ONnQZQwWRY-sDmokJo-AzEnDk0qsM7-InzJ94CYRmeSU/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(formData)
+})
+.then(response => response.json())
+.then(data => {
+  console.log("Success:", data);
+})
+.catch(error => {
+  console.error("Error:", error);
 });
+
 
   </script>
 
