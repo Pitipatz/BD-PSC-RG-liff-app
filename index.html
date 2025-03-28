@@ -41,7 +41,10 @@
       .then(data => {
         if (data.result === "success") {
           alert("บันทึกข้อมูลสำเร็จ!");
-          window.location.replace("https://docs.google.com/forms/d/e/1ucieDxGJlSZ053iEgCT8Qodjqc2x-T_7GZwMUCVXa9c/viewform");  // 👉 Redirect ไป Google Form ถ้าต้องการ
+          const googleFormUrl = "https://docs.google.com/forms/d/e/1ucieDxGJlSZ053iEgCT8Qodjqc2x-T_7GZwMUCVXa9c/viewform?"
+
+          window.location.replace(googleFormUrl);
+
         } else {
           alert("เกิดข้อผิดพลาด: " + data.error);
         }
