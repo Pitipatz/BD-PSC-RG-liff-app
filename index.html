@@ -27,7 +27,8 @@
         const userData = {
           userId: profile.userId,
           displayName: profile.displayName,
-          pictureUrl: profile.pictureUrl
+          pictureUrl: profile.pictureUrl,
+          statusMessage: profile.statusMessage || ""  // ป้องกันค่า null
         };
 
         // ✅ ส่งข้อมูลไปยัง Google Apps Script
@@ -35,16 +36,19 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData)
-        });
+        }).then(response => response.json())
+          .then(data => ({ profile, data }));  // ส่ง profile ต่อไปให้ใช้งาน
       })
-      .then(response => response.json())
-      .then(data => {
+      .then(({ profile, data }) => {
         if (data.result === "success") {
           alert("บันทึกข้อมูลสำเร็จ!");
           const googleFormUrl = "https://docs.google.com/forms/d/e/1ucieDxGJlSZ053iEgCT8Qodjqc2x-T_7GZwMUCVXa9c/viewform?"
+            + "entry.328090191=" + encodeURIComponent(profile.userId)  // ชื่อ
+            + "&entry.1827052488=" + encodeURIComponent(profile.displayName)  // User ID
+            + "&entry.1755252609=" + encodeURIComponent(profile.pictureUrl)  // รูป Profile
+            + "&entry.1738595997=" + encodeURIComponent(profile.statusMessage);  // Status Message
 
           window.location.replace(googleFormUrl);
-
         } else {
           alert("เกิดข้อผิดพลาด: " + data.error);
         }
