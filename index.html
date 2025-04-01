@@ -13,7 +13,7 @@
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
   <script>
     const liffId = "2007110168-ZWgRXyVl";  // 👉 ใส่ LIFF ID ของคุณ
-    const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd4QOo285nRSaBu6H4fllVhRC2pnVByqMOwKpMyzBFjeKBDJw/viewform?usp=pp_url"; // 👉 ใส่ Google Form URL
+    const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd4QOo285nRSaBu6H4fllVhRC2pnVByqMOwKpMyzBFjeKBDJw/viewform"; // 👉 ใส่ Google Form URL
 
     liff.init({ liffId })
       .then(() => {
@@ -24,16 +24,18 @@
         }
       })
       .then(profile => {
-        // 👉 ใส่ Entry ID ของฟอร์มแต่ละช่อง
         let email = "";
         const idToken = liff.getDecodedIDToken();
         if (idToken && idToken.email) {
           email = idToken.email;
         }
+
+        // ✅ ใช้ `?` กับ Entry ตัวแรก แล้วใช้ `&` กับตัวถัดไป
         const formUrl = googleFormUrl 
+            + "?usp=pp_url"
             + "&entry.1786871077=" + encodeURIComponent(email)  // email
-            + "&entry.328090191=" + encodeURIComponent(profile.userId)  // ชื่อ
-            + "&entry.1827052488=" + encodeURIComponent(profile.displayName)  // User ID
+            + "&entry.328090191=" + encodeURIComponent(profile.userId)  // User ID
+            + "&entry.1827052488=" + encodeURIComponent(profile.displayName)  // ชื่อ
             + "&entry.1755252609=" + encodeURIComponent(profile.pictureUrl)  // รูป Profile
             + "&entry.1738595997=" + encodeURIComponent(profile.statusMessage);  // Status Message
 
